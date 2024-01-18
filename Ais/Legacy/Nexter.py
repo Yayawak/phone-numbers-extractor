@@ -115,7 +115,8 @@ class Nexter:
 
         try:
             self.next_btn = self.driver.find_element(By.CLASS_NAME, "page-btn-next")
-            self.next_btn.click()
+            # self.next_btn.click()
+            self.driver.execute_script("arguments[0].click();", self.next_btn)
         except Exception as err:
             print(err)
         # for i in range(10):
@@ -151,10 +152,12 @@ class Nexter:
             # except:
             #     print("tag a next next not found.")
 
-            x = threading.Thread(target=self.autoclick_afew_times_thread_func)
-            x.start()
-            time.sleep(3)
-            x.join()
+            # * usable
+            # x = threading.Thread(target=self.autoclick_afew_times_thread_func)
+            # x.start()
+            # time.sleep(3)
+            # x.join()
+
             # time.sleep(.5)
 
             # test_page_index = self.get_current_page_acitve_index()

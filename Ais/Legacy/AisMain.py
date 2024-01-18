@@ -15,13 +15,37 @@ import pyautogui
 # from selenium.webdriver.safari.options import Options
 import threading
 
+def preventNotIdlingMouseThreadFn():
+# def preventNotIdlingMouseThreadFn(tname):
+    ...
+    while (True):
+        # print(f"Start Prevent Idling... tname = {tname}")
+        print(f"Start Prevent Idling... ")
+        pyautogui.move(-1, 0)
+        time.sleep(30)
+        pyautogui.move(+1, 0)
+        time.sleep(30)
+
 class AisMain:
 
     
                 
     def __init__(self):
         print("Entered constructure.")
-        self.driver = webdriver.Safari()
+        # self.driver = webdriver.Safari()
+        opt = webdriver.ChromeOptions()
+        opt.add_argument("--headless")
+        opt.add_argument("--disable-gpu")
+        # opt.add_experimental_option(
+        #     "pref", {
+        #         "profile.managed_default_content_settings.images": 2,
+        #     }
+        # )
+        self.driver = webdriver.Chrome(
+            options=opt
+        )
+
+
         self.ais_url = "https://become-ais-family.ais.co.th/find-by-mobile?fbclid=IwAR0tdUm1xq_8GPh0XzSukKbbFx0htKg23MIs6Ns6d2zXFEEtH_HrT8togvo"
         self.driver.get(self.ais_url)
 
@@ -34,20 +58,13 @@ class AisMain:
         # time.sleep(2)
 
         # self.current_page_acitve_index = '1'
-        tx = threading.Thread(target=self.preventNotIdlingMouseThreadFn)
+        # tx = threading.Thread(target=preventNotIdlingMouseThreadFn, args=("TTread TTTT"))
+        tx = threading.Thread(target=preventNotIdlingMouseThreadFn)
         tx.start()
 
 
         self.autorun()
     
-    def preventNotIdlingMouseThreadFn(self):
-        ...
-        while (True):
-            print("Start Prevent Idling...")
-            pyautogui.move(-1, 0)
-            time.sleep(30)
-            pyautogui.move(+1, 0)
-            time.sleep(30)
 
 
     
@@ -105,7 +122,7 @@ class AisMain:
 
             # while self.current_page_acitve_index
             # print(f"Go next page with current numbers len = {nos}")
-            print(f"Go next page with current numbers len = {len(no_list)}")
+            print(f"Go next page [{self.nexter.current_page_acitve_index}] with current numbers len = {len(no_list)}")
             # print(no_list)
             print("----------------")
             i += 1
