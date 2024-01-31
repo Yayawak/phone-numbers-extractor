@@ -14,6 +14,7 @@ import time
 import pyautogui 
 # from selenium.webdriver.safari.options import Options
 import threading
+import typing
 
 def preventNotIdlingMouseThreadFn():
 # def preventNotIdlingMouseThreadFn(tname):
@@ -26,13 +27,9 @@ def preventNotIdlingMouseThreadFn():
         pyautogui.move(+1, 0)
         time.sleep(30)
 
-
-
 class AisMain:
-
-    
-                
-    def __init__(self):
+    def __init__(self, start_finding_number:typing.List[int]=None, branch_name:str=None):
+    # def __init__(self, start_finding_number:typing.List[int]=):
         print("Entered constructure.")
         # self.driver = webdriver.Safari()
         opt = webdriver.ChromeOptions()
@@ -41,51 +38,62 @@ class AisMain:
         self.driver = webdriver.Chrome(
             options=opt
         )
-
-
         self.ais_url = "https://become-ais-family.ais.co.th/find-by-mobile?fbclid=IwAR0tdUm1xq_8GPh0XzSukKbbFx0htKg23MIs6Ns6d2zXFEEtH_HrT8togvo"
         self.driver.get(self.ais_url)
         self.inputManager = InputsManager(self.driver)
         self.inputManager.retriveInputs()
         self.nexter = Nexter(self.driver)
+        self.branch_name = branch_name
+        # tx = threading.Thread(target=preventNotIdlingMouseThreadFn)
+        # tx.start()
+        # self.inputManager.browseFirstNDigits([9, 3])
+
+        if start_finding_number is not None:
+            print(f"browsing {start_finding_number}")
+            self.inputManager.browseFirstNDigits(start_finding_number)
+            # self.getAvailableNumbers()
+            # self.inputManager.browseFirstNDigits([9, 3])
+            # self.autorun()
+
         
-        
-        tx = threading.Thread(target=preventNotIdlingMouseThreadFn)
-        tx.start()
+
+        # self.autorun()
 
 
-        self.autorun()
     
+    # def medusaSplit(self):
+    #     ...
 
+    
+    def _test00(self):
+        # pms = self.permutation("1234")
+        pms = self.permutation("7812")
+        print("PMS...")
+        print(pms)
+
+        # input_no = [9, 2, 8]
+        # input_no = [9, 2, 8, 1]
+        input_no = [9]
+        self.inputManager.browseFirstNDigits(input_no) 
+        nos = self.getAvailableNumbers()
+        print(f"input no is {input_no} -> get nos = {nos}.")
+
+        # ต้องมีค่าต่ำกว่า 500 ถึงจะเก็บเลขลง db
+        threshold_no = 500
+        no_list = []
+        if nos > 0 and nos < threshold_no:
+            no_sub_list = self.nexter.get_all_numbers_in_page()
+            no_list.append(no_sub_list)
+
+        print("no list = ", no_list)
+
+        numbers = self.nexter.get_all_numbers()
+        print(f"#nos = {len(numbers)}")
+        print("All number is ", numbers)
 
     
     def autorun(self):
         print("auto running...")
-        # pms = permutation("1234")
-        # pms = self.permutation("7812")
-        # print("PMS...")
-        # print(pms)
-
-        # input_no = [9, 2, 8]
-        # input_no = [9, 2, 8, 1]
-        # input_no = [9]
-        # self.inputManager.browseFirstNDigits(input_no) 
-        # nos = self.getAvailableNumbers()
-        # print(f"input no is {input_no} -> get nos = {nos}.")
-
-        # ต้องมีค่าต่ำกว่า 500 ถึงจะเก็บเลขลง db
-        # threshold_no = 500
-        # no_list = []
-        # if nos > 0 and nos < threshold_no:
-        #     no_sub_list = self.nexter.get_all_numbers_in_page()
-        #     no_list.append(no_sub_list)
-
-        # print("no list = ", no_list)
-
-        # numbers = self.nexter.get_all_numbers()
-        # print(f"#nos = {len(numbers)}")
-        # print("All number is ", numbers)
-
 
         nos = -1
         no_list = []
@@ -178,7 +186,7 @@ class AisMain:
         #         return False
         return True
 
-    
+
     def permutation(self, s):
         if len(s) == 1:
             return [s]
